@@ -3,6 +3,13 @@ $jsonPath =  Join-Path -Path $scriptDir -ChildPath 'settings.json'
 $json = Get-Content -Raw -Path $jsonPath | ConvertFrom-Json
 
 
+if(![System.IO.File]::Exists($json.CsvFilePath))
+{
+    Write-Host  $json.CsvFilePath "doesnot exist" -f red
+    return
+}
+
+
 $fileNames = Import-Csv -Path $json.CsvFilePath  | Select-Object -Property FileName
 $filePath = $json.RemovingFilesLocation
 
@@ -14,7 +21,6 @@ foreach($x in $fileNames)
 }
 
 Write-Host "Total Name in CSV:" $csvFileNames.Count
-
 Write-Host  "Total Files:"(Get-ChildItem $filePath | Measure-Object).Count
 
 
